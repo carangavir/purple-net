@@ -1,0 +1,4 @@
+"use server";
+import { revalidatePath } from "next/cache"; import { requireUser } from "@/server/auth/require-user"; import { createDirector, setArchived } from "@/server/crm/service";
+export async function createDirectorAction(formData: FormData) { const user = await requireUser(); await createDirector({ legalName: formData.get("legalName"), schoolId: formData.get("schoolId"), title: formData.get("title") || undefined, email: formData.get("email") || undefined, phone: formData.get("phone") || undefined }, user.id); revalidatePath("/directors"); }
+export async function archiveDirectorAction(formData: FormData) { const user = await requireUser(); const id = String(formData.get("id")); await setArchived("director", id, formData.get("archived") === "true", user.id); revalidatePath("/directors"); revalidatePath(`/directors/${id}`); }

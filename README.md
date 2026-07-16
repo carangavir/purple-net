@@ -93,4 +93,8 @@ The E2E smoke test covers login, dashboard access, navigation, narrow width, log
 
 There is no public sign-up, password reset, MFA, email, file storage, or live recruiting-domain table. Import batches are staging/review data only, and the supplied Excel workbook is ignored and never auto-imported.
 
-The recommended next step is Phase 3: build school and director live records plus a controlled transactional path for applying approved Phase 2 proposals.
+## Phase 3 schools and directors
+
+Schools and directors are now live records with protected list/detail views, searchable lists, archive/restore controls, current and historical employment, contact methods, verification structures, tags, interests, and opportunities. Approved Phase 2 `create` proposals can be applied explicitly and transactionally; matching records block application for manual resolution, and imported fields retain proposal provenance.
+
+The recommended next step is Phase 4: prospect pipeline, recruiting cycles, scoring, and duplicate review.
