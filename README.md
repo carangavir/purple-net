@@ -1,6 +1,6 @@
 # Purple Net
 
-Purple Net is a private, single-user recruiting CRM. This repository currently contains **Phase 1 only**: the application foundation, authentication, security, audit trail, and navigation shell. It deliberately contains no workbook import or recruiting-domain records.
+Purple Net is a private, single-user recruiting CRM. This repository currently contains **Phases 1–2**: the application foundation, authentication, security, audit trail, navigation shell, and immutable workbook-import staging/review workflow. It still contains no live recruiting-domain records.
 
 ## Prerequisites
 
@@ -31,6 +31,18 @@ npm run dev
 Migrations are explicit SQL files in `drizzle/`. `db:migrate` keeps a checksum ledger in `purple_net_migrations` and refuses database URLs that look production-oriented. The administrator command is idempotent: it creates the first administrator only, never prints its password, and makes no change when one already exists.
 
 `npm run db:generate` is available for future schema authoring, but review and commit generated SQL before applying it. Production migrations are a controlled manual command, never part of a Netlify build or deploy preview.
+
+## Phase 2 import staging
+
+The Imports page accepts `.xlsx` and `.csv` files up to 10 MB. A staged batch preserves the original file bytes, SHA-256 hash, sheet order, every source row/cell, display value, and formula. It maps the known Directors columns, splits multi-name director cells into separate proposals, identifies repeated in-batch candidates for conflict review, and preserves unmapped data in its original cells.
+
+```bash
+npm run import:verify-source
+```
+
+This read-only command verifies the supplied Phase 2 workbook has the expected sheets, 260 Director data rows, and 19/154/24/63 tier totals. The supplied workbook is gitignored and never auto-imported.
+
+Reviewing a proposal records an audited approval or rejection only. It **does not** create or update schools, directors, or any other live records; transactional live-record application is deferred until the CRM schema exists in Phase 3.
 
 ## Authentication and security
 
@@ -79,6 +91,6 @@ The E2E smoke test covers login, dashboard access, navigation, narrow width, log
 
 ## Current limitations
 
-This phase intentionally has no public sign-up, password reset, MFA, email, file storage, imports, workbook handling, or recruiting-domain tables/features. The supplied Excel workbook is ignored and untouched.
+There is no public sign-up, password reset, MFA, email, file storage, or live recruiting-domain table. Import batches are staging/review data only, and the supplied Excel workbook is ignored and never auto-imported.
 
-The recommended next step is Phase 2: immutable Excel import staging, mapping, review, duplicate detection, and explicit approval—without writing directly to live records.
+The recommended next step is Phase 3: build school and director live records plus a controlled transactional path for applying approved Phase 2 proposals.
