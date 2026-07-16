@@ -97,4 +97,8 @@ There is no public sign-up, password reset, MFA, email, file storage, or live re
 
 Schools and directors are now live records with protected list/detail views, searchable lists, archive/restore controls, current and historical employment, contact methods, verification structures, tags, interests, and opportunities. Approved Phase 2 `create` proposals can be applied explicitly and transactionally; matching records block application for manual resolution, and imported fields retain proposal provenance.
 
-The recommended next step is Phase 4: prospect pipeline, recruiting cycles, scoring, and duplicate review.
+## Phase 4 prospect pipeline
+
+Prospects belong to a recruiting cycle and retain source, school, stage, interest level, history, and score snapshots. Scores are transparent: each calculation saves its factor contributions and missing-data list. Name-and-cycle matches become duplicate candidates for manual review only; Purple Net never merges prospects automatically.
+
+The recommended next step is Phase 5: tasks and the daily dashboard.

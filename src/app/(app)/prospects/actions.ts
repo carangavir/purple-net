@@ -1,0 +1,7 @@
+"use server";
+import { revalidatePath } from "next/cache"; import { requireUser } from "@/server/auth/require-user"; import { changeStage, createCycle, createProspect, reviewDuplicate, scoreProspect } from "@/server/prospects/service";
+export async function createCycleAction(f: FormData) { const u = await requireUser(); await createCycle(String(f.get("name")), String(f.get("entryTerm")), u.id); revalidatePath("/prospects"); }
+export async function createProspectAction(f: FormData) { const u = await requireUser(); await createProspect({ fullName: f.get("fullName"), schoolId: f.get("schoolId") || undefined, cycleId: f.get("cycleId"), source: f.get("source"), stage: f.get("stage") || undefined, interest: f.get("interest") || undefined }, u.id); revalidatePath("/prospects"); }
+export async function scoreAction(f: FormData) { await requireUser(); await scoreProspect(String(f.get("id"))); revalidatePath("/prospects"); }
+export async function stageAction(f: FormData) { const u = await requireUser(); await changeStage(String(f.get("id")), String(f.get("stage")) as never, u.id, String(f.get("note") || "")); revalidatePath(`/prospects/${f.get("id")}`); }
+export async function duplicateAction(f: FormData) { const u = await requireUser(); const decision = f.get("decision") === "not_duplicate" ? "not_duplicate" : "needs_review"; await reviewDuplicate(String(f.get("candidateId")), decision, u.id, String(f.get("note") || "")); revalidatePath("/prospects/duplicates"); }
