@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+:root { --ink: #201d2a; --muted: #665f70; --surface: #ffffff; --canvas: #f7f6f9; --purple: #4f2d7f; --purple-dark: #342052; --border: #ddd9e4; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--canvas); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 3px solid #7753ac; outline-offset: 2px; }
