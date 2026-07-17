@@ -1,0 +1,2 @@
+"use server"; import { revalidatePath } from "next/cache"; import { requireUser } from "@/server/auth/require-user"; import { createVisit } from "@/server/visits/service";
+export async function createVisitAction(f: FormData) { const u = await requireUser(); await createVisit({ title: f.get("title"), type: f.get("type"), startsAt: f.get("startsAt"), schoolId: f.get("schoolId") || undefined, goals: f.get("goals") || undefined, notes: f.get("notes") || undefined, followUpTitle: f.get("followUpTitle") || undefined }, u.id); revalidatePath("/visits"); revalidatePath("/tasks"); }

@@ -1,0 +1,9 @@
+import "server-only";
+import { asc } from "drizzle-orm";
+import { z } from "zod";
+import { getDb } from "@/server/db/client";
+import { auditEvents, tasks, visitOutcomes, visitSchools, visits } from "@/server/db/schema";
+const visitSchema = z.object({ title: z.string().trim().min(2), type: z.enum(["masterclass", "sectional", "individual_lesson", "concert", "recruiting_presentation", "school_visit", "other"]), startsAt: z.string().min(1), schoolId: z.string().uuid().optional(), goals: z.string().optional(), notes: z.string().optional(), followUpTitle: z.string().optional() });
+export async function createVisit(input: unknown, userId: string) { const data = visitSchema.parse(input); return getDb().transaction(async (tx) => { const [visit] = await tx.insert(visits).values({ title: data.title, type: data.type, startsAt: new Date(data.startsAt), goals: data.goals || null, notes: data.notes || null }).returning(); if (data.schoolId) await tx.insert(visitSchools).values({ visitId: visit.id, schoolId: data.schoolId }); if (data.followUpTitle) await tx.insert(tasks).values({ title: data.followUpTitle, priority: "high", source: "visit", schoolId: data.schoolId || null, notes: `Follow-up generated from visit: ${visit.title}` }); await tx.insert(auditEvents).values({ actorUserId: userId, eventType: "visit.created", metadata: { visitId: visit.id, followUpCreated: Boolean(data.followUpTitle) } }); return visit; }); }
+export async function listVisits() { return getDb().select().from(visits).orderBy(asc(visits.startsAt)); }
+export async function addOutcome(visitId: string, outcome: string, notes: string | undefined, userId: string) { await getDb().transaction(async (tx) => { await tx.insert(visitOutcomes).values({ visitId, outcome, notes: notes || null }); await tx.insert(auditEvents).values({ actorUserId: userId, eventType: "visit.outcome_added", metadata: { visitId } }); }); }

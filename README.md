@@ -105,4 +105,8 @@ Prospects belong to a recruiting cycle and retain source, school, stage, interes
 
 Tasks support due dates, priority, status, reminder/recurrence data, and future automation-rule provenance. The dashboard prioritizes overdue, due-today, and upcoming open work without changing assigned priority.
 
-The recommended next step is Phase 6: visits, masterclasses, travel, notes, and follow-up task creation.
+## Phase 6 visits and travel
+
+Visits support trip grouping, multi-school stops, school/director/prospect links, outcomes, mileage, expenses, notes, and explicit follow-up task generation. Creating a visit never sends communications.
+
+The recommended next step is Phase 7: templates, campaigns, and the Outlook draft workflow.
