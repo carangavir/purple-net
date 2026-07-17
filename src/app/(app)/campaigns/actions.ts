@@ -1,0 +1,3 @@
+"use server"; import { revalidatePath } from "next/cache"; import { redirect } from "next/navigation"; import { requireUser } from "@/server/auth/require-user"; import { createCampaign, createDraft } from "@/server/campaigns/service";
+export async function createCampaignAction(f: FormData) { const u = await requireUser(); await createCampaign(String(f.get("name")), String(f.get("objective") || ""), String(f.get("templateId") || ""), u.id); revalidatePath("/campaigns"); }
+export async function createDraftAction(f: FormData) { const u = await requireUser(); const result = await createDraft(String(f.get("recipient")), String(f.get("subject")), String(f.get("body")), u.id); redirect(result.composeUrl); }

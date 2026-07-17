@@ -1,0 +1,2 @@
+"use server"; import { revalidatePath } from "next/cache"; import { requireUser } from "@/server/auth/require-user"; import { createTemplate } from "@/server/campaigns/service";
+export async function createTemplateAction(f: FormData) { const u = await requireUser(); await createTemplate({ name: f.get("name"), category: f.get("category"), subject: f.get("subject"), body: f.get("body") }, u.id); revalidatePath("/templates"); }

@@ -109,4 +109,8 @@ Tasks support due dates, priority, status, reminder/recurrence data, and future 
 
 Visits support trip grouping, multi-school stops, school/director/prospect links, outcomes, mileage, expenses, notes, and explicit follow-up task generation. Creating a visit never sends communications.
 
-The recommended next step is Phase 7: templates, campaigns, and the Outlook draft workflow.
+## Phase 7 templates, campaigns, and drafts
+
+Templates are versioned. Campaign and recipient state is preserved, while draft requests require review. The Outlook fallback opens a compose window only after the user asks for it; Purple Net never sends email automatically.
+
+The recommended next step is Phase 8: mobile refinement, accessibility/security review, and production-launch preparation.
