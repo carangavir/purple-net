@@ -1,0 +1,3 @@
+"use server"; import { revalidatePath } from "next/cache"; import { requireUser } from "@/server/auth/require-user"; import { completeTask, createTask } from "@/server/tasks/service";
+export async function createTaskAction(f: FormData) { const u = await requireUser(); await createTask({ title: f.get("title"), dueAt: f.get("dueAt") || undefined, priority: f.get("priority") || undefined }, u.id); revalidatePath("/tasks"); revalidatePath("/dashboard"); }
+export async function completeTaskAction(f: FormData) { const u = await requireUser(); await completeTask(String(f.get("id")), u.id); revalidatePath("/tasks"); revalidatePath("/dashboard"); }

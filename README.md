@@ -101,4 +101,8 @@ Schools and directors are now live records with protected list/detail views, sea
 
 Prospects belong to a recruiting cycle and retain source, school, stage, interest level, history, and score snapshots. Scores are transparent: each calculation saves its factor contributions and missing-data list. Name-and-cycle matches become duplicate candidates for manual review only; Purple Net never merges prospects automatically.
 
-The recommended next step is Phase 5: tasks and the daily dashboard.
+## Phase 5 tasks and daily dashboard
+
+Tasks support due dates, priority, status, reminder/recurrence data, and future automation-rule provenance. The dashboard prioritizes overdue, due-today, and upcoming open work without changing assigned priority.
+
+The recommended next step is Phase 6: visits, masterclasses, travel, notes, and follow-up task creation.
