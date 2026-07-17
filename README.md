@@ -1,6 +1,6 @@
 # Purple Net
 
-Purple Net is a private, single-user recruiting CRM. This repository currently contains **Phases 1–2**: the application foundation, authentication, security, audit trail, navigation shell, and immutable workbook-import staging/review workflow. It still contains no live recruiting-domain records.
+Purple Net is a private, single-user recruiting CRM. This repository contains **Phases 1–8**: authentication, import staging, schools/directors, prospects, tasks/dashboard, visits, templates/campaigns, and launch-readiness hardening.
 
 ## Prerequisites
 
@@ -89,9 +89,18 @@ The E2E smoke test covers login, dashboard access, navigation, narrow width, log
 3. Create a Netlify site connected to that repository, install the Next.js plugin, and define environment variables by deploy context.
 4. Create the administrator using a secure value in the target environment; never place credentials in GitHub variables, client code, or logs.
 
+## Production launch and restore checklist
+
+1. Apply the reviewed migrations to staging first and validate the application there. Production migration remains a manual, controlled action from a protected environment; Netlify builds and deploy previews must never migrate it.
+2. Create a separate Supabase production project and set only protected production environment variables in Netlify.
+3. Enable Supabase backups for the selected plan, document the owner and restore contact, and schedule a restore rehearsal.
+4. Before launch, export the PostgreSQL schema/data and retain a verified restore record. Future file storage must include an attachment manifest.
+5. Confirm HTTPS, security headers, database access controls, administrator sign-in, logout, import review, and no-send Outlook behavior on desktop and narrow mobile screens.
+6. Require CI, review, and explicit production approval before deployment.
+
 ## Current limitations
 
-There is no public sign-up, password reset, MFA, email, file storage, or live recruiting-domain table. Import batches are staging/review data only, and the supplied Excel workbook is ignored and never auto-imported.
+There is no public sign-up, password reset, MFA, provider-backed Microsoft Graph integration, file storage, offline synchronization, or AI. The Outlook path only prepares a user-reviewed compose window; it never sends email.
 
 ## Phase 3 schools and directors
 
@@ -113,4 +122,4 @@ Visits support trip grouping, multi-school stops, school/director/prospect links
 
 Templates are versioned. Campaign and recipient state is preserved, while draft requests require review. The Outlook fallback opens a compose window only after the user asks for it; Purple Net never sends email automatically.
 
-The recommended next step is Phase 8: mobile refinement, accessibility/security review, and production-launch preparation.
+Phase 8 is the current release-readiness phase. Remaining provider-owned work is the manual Supabase, Netlify, GitHub, backup, and restore setup listed above.
