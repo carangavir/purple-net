@@ -16,6 +16,7 @@
     "db:validate": "tsx scripts/validate-migrations.ts",
     "import:verify-source": "tsx scripts/verify-phase2-workbook.ts",
     "admin:setup": "tsx --conditions=react-server --env-file=.env.local scripts/setup-admin.ts",
+    "admin:reset-password": "tsx --conditions=react-server --env-file=.env.local scripts/reset-admin-password.ts",
     "guard:database": "tsx scripts/guard-database-url.ts"
   },
   "dependencies": {
