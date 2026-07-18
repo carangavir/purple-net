@@ -12,6 +12,11 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // The import service enforces a 10 MB file limit. Allow a little multipart
+    // request overhead so valid 10 MB workbooks reach that validation.
+    serverActions: { bodySizeLimit: "12mb" },
+  },
   async headers() { return [{ source: "/(.*)", headers: process.env.NODE_ENV === "production" ? [...securityHeaders, { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" }] : securityHeaders }]; },
 };
 export default nextConfig;
