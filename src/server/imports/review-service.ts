@@ -24,6 +24,21 @@ export async function decideProposal(input: { batchId: string; proposalId: strin
   });
 }
 
+/** Approves only new, conflict-free records. Conflicts stay pending for manual review. */
+export async function approveCleanProposals(input: { batchId: string; reviewerUserId: string }) {
+  return getDb().transaction(async (tx) => {
+    const approved = await tx.update(importProposals).set({ status: "approved", decidedAt: new Date() }).where(and(
+      eq(importProposals.batchId, input.batchId),
+      eq(importProposals.status, "pending"),
+      eq(importProposals.proposedAction, "create"),
+    )).returning({ id: importProposals.id });
+    if (!approved.length) return 0;
+    await tx.insert(importReviews).values(approved.map((proposal) => ({ proposalId: proposal.id, reviewerUserId: input.reviewerUserId, decision: "approved", note: "Bulk-approved as a conflict-free create proposal." })));
+    await tx.insert(auditEvents).values({ actorUserId: input.reviewerUserId, eventType: "import.clean_proposals_bulk_approved", metadata: { batchId: input.batchId, count: approved.length } });
+    return approved.length;
+  });
+}
+
 const schoolPayload = z.object({ proposed: z.object({ name: z.string().min(1), metro: z.string(), district: z.string(), uilConference: z.string(), phone: z.string(), address: z.string(), city: z.string(), zip: z.string(), website: z.string(), tier: z.string() }), source: z.record(z.string(), z.unknown()) });
 const directorPayload = z.object({ proposed: z.object({ name: z.string().min(1), school: z.string().min(1), email: z.string(), phone: z.string(), verificationNote: z.string(), tier: z.string(), outreachNotes: z.string() }), source: z.record(z.string(), z.unknown()) });
 
