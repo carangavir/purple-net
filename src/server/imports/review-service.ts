@@ -70,3 +70,28 @@ export async function applyApprovedProposal(input: { batchId: string; proposalId
     return { entityType, entityId };
   });
 }
+
+/**
+ * Applies approved creates in dependency order. A failed record is left
+ * approved so it can be corrected and retried manually; successful records
+ * are committed one at a time and are never rolled back by a later failure.
+ */
+export async function applyApprovedProposals(input: { batchId: string; actorUserId: string }) {
+  const approved = await getDb().select({ id: importProposals.id, entityType: importProposals.entityType })
+    .from(importProposals)
+    .where(and(eq(importProposals.batchId, input.batchId), eq(importProposals.status, "approved"), eq(importProposals.proposedAction, "create")));
+  const ordered = [...approved.filter((proposal) => proposal.entityType === "school"), ...approved.filter((proposal) => proposal.entityType === "director")];
+  const failures: Array<{ proposalId: string; message: string }> = [];
+  let applied = 0;
+
+  for (const proposal of ordered) {
+    try {
+      await applyApprovedProposal({ batchId: input.batchId, proposalId: proposal.id, actorUserId: input.actorUserId });
+      applied += 1;
+    } catch (error) {
+      failures.push({ proposalId: proposal.id, message: error instanceof Error ? error.message : "Could not apply this proposal." });
+    }
+  }
+
+  return { applied, failures };
+}
